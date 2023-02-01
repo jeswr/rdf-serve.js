@@ -15,11 +15,22 @@ export function negotiateHandlerFactory(basePath: string) {
     const fileFolder = path.join(basePath, ...req.path.split('/').slice(0, -1));
 
     // First get the file name
-    const fileName = fs
-      .readdirSync(fileFolder)
-      .find(
-        (file) => req.path.slice(req.path.lastIndexOf('/') + 1) === file.slice(0, file.lastIndexOf('.')),
-      );
+    let fileName: string | undefined;
+
+    try {
+      fileName = fs
+        .readdirSync(fileFolder)
+        .find(
+          (file) => req.path.slice(req.path.lastIndexOf('/') + 1) === file.slice(0, file.lastIndexOf('.')),
+        );
+    } catch (e) {
+      return res
+        .status(404)
+        .send(
+          'Not Found',
+        )
+        .end();
+    }
 
     if (typeof fileName !== 'string') {
       return res.status(404).send('Not Found').end();
