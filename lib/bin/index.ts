@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const path = require('path');
 const getPort = require('get-port-please');
 const rdfServe = require('..');
