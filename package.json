@@ -103,7 +103,5 @@
     "@types/express": "^4.17.16",
     "@types/negotiator": "^0.6.1"
   },
-  "bin": {
-    "rdf-serve": "./dist/bin/index"
-  }
+  "bin": "./dist/bin/index.js"
 }
