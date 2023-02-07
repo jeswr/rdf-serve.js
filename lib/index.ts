@@ -89,9 +89,9 @@ export default function rdfServe(basePath: string) {
   const limit = RateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute,
     max: 100,
-  })
+  });
 
-  app.use(limit)
+  app.use(limit);
 
   app.get('*', negotiateHandlerFactory(basePath));
   return app;
