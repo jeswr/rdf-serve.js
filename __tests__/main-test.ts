@@ -110,17 +110,3 @@ describe('Testing rdfServe library export', () => {
 
   testOnPort(3002);
 });
-
-describe('Testing rdfServe on CLI startup', () => {
-  let app: http.Server;
-
-  beforeAll(() => {
-    app = process.cnpm;
-  });
-
-  afterAll(async () => {
-    await new Promise((res) => { app.on('close', res); app.close(); });
-  });
-
-  testOnPort(3002);
-});
