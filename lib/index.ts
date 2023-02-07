@@ -3,6 +3,7 @@ import fs from 'fs';
 import Negotiator from 'negotiator';
 import path from 'path';
 import { allowedDestinations, getContentType, transform } from 'rdf-transform';
+import RateLimit from 'express-rate-limit';
 
 /**
  * Create an express handler that serves content negotiated files from a given
@@ -84,6 +85,14 @@ export function negotiateHandlerFactory(basePath: string) {
  */
 export default function rdfServe(basePath: string) {
   const app = express();
+
+  const limit = RateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute,
+    max: 100,
+  });
+
+  app.use(limit);
+
   app.get('*', negotiateHandlerFactory(basePath));
   return app;
 }
