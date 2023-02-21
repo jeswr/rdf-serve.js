@@ -50,9 +50,11 @@ export function negotiateHandlerFactory(basePath: string) {
     }
 
     // Then get the response content type
-    const responseType = new Negotiator(req).mediaType(
-      await allowedDestinations(sourceContentType),
-    );
+    const responseType = sourceContentType === 'text/n3' && new Negotiator(req).mediaType(['text/n3'])
+      // If the source is n3, and the client accepts n3, then we should always use n3 as it is not
+      // compatible with other formats due to accepting variables in the subject & object positions
+      ? 'text/n3'
+      : new Negotiator(req).mediaType(await allowedDestinations(sourceContentType));
 
     if (typeof responseType !== 'string') {
       return res.status(406).send('Not Acceptable').end();
