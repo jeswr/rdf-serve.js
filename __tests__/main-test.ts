@@ -3,6 +3,7 @@ import type * as http from 'http';
 import fs from 'fs';
 import rdfParse from 'rdf-parse';
 import arrayifyStream from 'arrayify-stream';
+import { QueryEngine } from '@comunica/query-sparql';
 import rdfServe from '../lib';
 
 const streamifyString = require('streamify-string');
@@ -95,6 +96,14 @@ function testOnPort(port: number) {
       }),
     }).then((res) => res.status),
   ).resolves.toEqual(500));
+
+  it('Should be able to query an N3 file from Comunica', () => {
+    const myEngine = new QueryEngine();
+    return expect(myEngine.queryBindings(
+      'SELECT * WHERE { ?s ?p ?o }',
+      { sources: [`http://localhost:${port}/rule`] },
+    ).then((r) => r.toArray())).resolves.toHaveLength(1);
+  });
 }
 
 describe('Testing rdfServe library export', () => {
