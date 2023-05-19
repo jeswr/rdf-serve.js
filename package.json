@@ -18,6 +18,7 @@
     "lint:fix": "npm run lint -- --fix",
     "build": "tsc",
     "prepare": "tsc",
+    "serve:sample": "node ./dist/bin/index __tests__/sample",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -48,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "arrayify-stream": "^2.0.1",
+    "cross-fetch": "^3.1.6",
     "eslint": "^8.32.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
@@ -56,7 +58,6 @@
     "pre-commit": "^1.2.2",
     "rdf-parse": "^2.3.0",
     "semantic-release": "^20.0.3",
-    "streamify-string": "^1.0.1",
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.4"
   },
@@ -106,6 +107,7 @@
     "get-port-please": "^3.0.1",
     "negotiator": "^0.6.3",
     "rdf-transform": "^1.0.0",
+    "streamify-string": "^1.0.1",
     "yargs": "^17.6.2"
   },
   "peerDependencies": {

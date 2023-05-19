@@ -4,11 +4,12 @@ import fs from 'fs';
 import rdfParse from 'rdf-parse';
 import arrayifyStream from 'arrayify-stream';
 import { QueryEngine } from '@comunica/query-sparql';
+import { fetch } from 'cross-fetch';
 import rdfServe from '../lib';
 
 const streamifyString = require('streamify-string');
 
-function testOnPort(port: number) {
+function testOnPort(port: number, containment = false) {
   it('Should return the original file when no content negotiation is applied', async () => {
     await expect(
       fetch(`http://localhost:${port}/jesse`).then((res) => res.text()),
@@ -39,7 +40,7 @@ function testOnPort(port: number) {
     expect(quads).toHaveLength(1);
   });
 
-  it('Should return 404 when the file does not exist', async () => {
+  (containment ? it.skip : it)('Should return 404 when the file does not exist', async () => {
     await expect(
       fetch(`http://localhost:${port}/does-not-exist`).then((res) => res.text()),
     ).resolves.toEqual('Not Found');
@@ -118,4 +119,44 @@ describe('Testing rdfServe library export', () => {
   });
 
   testOnPort(3002);
+});
+
+describe('Testing rdfServe library export with `ldp:contains` triple', () => {
+  let app: http.Server;
+
+  beforeAll(() => {
+    app = rdfServe(path.join(__dirname, 'sample'), true).listen(3002);
+  });
+
+  afterAll(async () => {
+    await new Promise((res) => { app.on('close', res); app.close(); });
+  });
+
+  testOnPort(3002, true);
+
+  it('Should be able to query the ldp:contains triples from Comunica', () => {
+    const myEngine = new QueryEngine();
+    return expect(myEngine.queryBindings(
+      'SELECT * WHERE { ?s ?p ?o }',
+      { sources: [`http://localhost:${3002}/`] },
+    ).then((r) => r.toArray())).resolves.toHaveLength(6);
+  });
+
+  it('Should be able to query the ldp:contains triples on nested container from Comunica', () => {
+    const myEngine = new QueryEngine();
+    return expect(myEngine.queryBindings(
+      'SELECT * WHERE { ?s ?p ?o }',
+      { sources: [`http://localhost:${3002}/nested/`] },
+    ).then((r) => r.toArray())).resolves.toHaveLength(1);
+  });
+
+  it('Should be able to query the ldp:contains triples on nested container from Comunica', () => {
+    const myEngine = new QueryEngine();
+    return expect(myEngine.queryBindings(
+      'SELECT * WHERE { <http://localhost:3002/> <http://www.w3.org/ns/ldp#contains> <http://localhost:3002/noExt> }',
+      { sources: ['http://localhost:3002/'] },
+    ).then((r) => r.toArray())).resolves.toHaveLength(1);
+  });
+
+  it('Should 404 on non-existant containers', () => expect(fetch(`http://localhost:${3002}/noContainer/`).then((res) => res.status)).resolves.toEqual(404));
 });
