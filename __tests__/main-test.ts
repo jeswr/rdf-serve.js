@@ -4,6 +4,7 @@ import fs from 'fs';
 import rdfParse from 'rdf-parse';
 import arrayifyStream from 'arrayify-stream';
 import { QueryEngine } from '@comunica/query-sparql';
+import { fetch } from 'cross-fetch';
 import rdfServe from '../lib';
 
 const streamifyString = require('streamify-string');
