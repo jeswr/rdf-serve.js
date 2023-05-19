@@ -46,6 +46,11 @@ to specify the port these files should be served on run
 rdf-serve ./myFiles -p 3005
 ```
 
+to include `ldp:contains` triples on containers
+
+```
+rdf-serve ./myFiles -l
+```
 ## License
 ©2023–present
 [Jesse Wright](https://github.com/jeswr),
