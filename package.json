@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/jeswr/rdf-serve.js#readme",
   "devDependencies": {
-    "@comunica/query-sparql": "^2.6.7",
+    "@comunica/query-sparql": "^3.0.1",
     "@types/jest": "^29.2.6",
     "@types/streamify-string": "^1.0.0",
     "@types/yargs": "^17.0.22",
