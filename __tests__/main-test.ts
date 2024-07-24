@@ -1,7 +1,7 @@
 import path from 'path';
 import type * as http from 'http';
 import fs from 'fs';
-import rdfParse from 'rdf-parse';
+import { rdfParser } from 'rdf-parse';
 import arrayifyStream from 'arrayify-stream';
 import { QueryEngine } from '@comunica/query-sparql';
 import { fetch } from 'cross-fetch';
@@ -35,7 +35,7 @@ function testOnPort(port: number, containment = false) {
       jsonldResponse,
     ).toContain('{');
 
-    const quadStream = rdfParse.parse(streamifyString(jsonldResponse), { contentType: 'application/ld+json' });
+    const quadStream = rdfParser.parse(streamifyString(jsonldResponse), { contentType: 'application/ld+json' });
     const quads = await arrayifyStream(quadStream);
     expect(quads).toHaveLength(1);
   });
